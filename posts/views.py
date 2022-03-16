@@ -85,7 +85,7 @@ def post_add_view(request):
 # Comment on Post
 @login_required(login_url='posts:login')
 def comment_view(request,id):
-    comments = Comments.objects.filter(post=id)
+    comments = Comments.objects.filter(post=id).values('name__username','id','body','droped_on')
     form = CommentForm()
     user = None
     if request.method == 'POST':

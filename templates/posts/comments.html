@@ -15,10 +15,10 @@
     {% for comment in comments %}
     <div class="column">
       <div class="card">
-        <h3>{{comment.name}}</h3>
-        <small>Commented On {{comment.droped_on}}</small>
+        <div style="display: flex;">
+        <h2>{{comment.name__username}}</h2>
+         <small style="margin: 28px;">Commented On {{comment.droped_on}}</small></div>
         <p>{{comment.body}}</p>
-        <p>Some text</p>
       </div>
     </div>
     <hr>
