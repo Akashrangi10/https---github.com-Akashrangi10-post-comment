@@ -11,8 +11,10 @@ class AllUsers(AbstractUser):
 
 class Post(models.Model):
     name = models.ForeignKey(AllUsers,on_delete=models.CASCADE)
-    post_desc = models.TextField(max_length=1000)
+    post_img = models.ImageField(upload_to ="posts",blank=True,null=True)
+    post_desc = models.TextField(max_length=1000,blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    archive = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name}"
@@ -35,3 +37,14 @@ class Comments(models.Model):
     
     def __str__(self):
         return f"{self.name}-{self.body}"
+
+class MyProfileDetails(models.Model):
+    username = models.ForeignKey(AllUsers,models.CASCADE)
+    profile_pic = models.ImageField(upload_to ="ProfilePhotos",blank=True,null=True)
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=11)
+    bio = models.TextField(max_length=1000)
+
+    def __str__(self):
+        return f"{self.username}"

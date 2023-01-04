@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style2.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <title>index | Feed</title>
+
+    <style>
+        .head{
+            
+            background: linear-gradient(#ffc1c2, #c1c4e5);
+            margin: auto;
+            width: 50%;
+            display: flex;
+            border-bottom-left-radius: 25px;
+            border-top-right-radius: 25px;
+            
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gutter-lg: 4rem;
+            --gutter-md: 3rem;
+            --gutter-sm: 1rem;
+            --gutter-xm: 1rem;
+            --color-white: #fff;
+            --color-black: #000;
+        }
+
+
+        .banner {
+            display: flex;
+            height: 7vh;
+        }
+
+        .button {
+            margin: auto;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .button-wrap-wrapper {
+            width: 192px;
+            height: 115px;
+            border: 1px dashed #fff;
+            margin: auto;
+            display: flex;
+        }
+
+        .button-wrap {
+            width: 128px;
+            height: 128px;
+            margin: auto;
+            /* background: orange; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed #fff;
+        }
+
+        .button__like-text {
+            display: block;
+            color: var(--color-black);
+            background: var(--color-white);
+            width: var(--gutter-lg);
+            height: var(--gutter-lg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main{
+            margin: auto;
+            width: 46%;
+            padding-top: 12px;
+        }
+        .column{
+            padding-bottom: 22px;
+        }
+        .setImage{
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .Nav{
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="Nav">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="javascript:void(0)"></a>
+                <img style="width: 10%" class="navbar-brand" src="{% static 'images/logo.png' %}" />
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mynavbar">
+                    <ul class="navbar-nav me-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link">{{request.user}}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'posts:logout' %}">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'posts:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'posts:register' %}">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <button style="background-color: #498dff; border: 0px; " class="cancel">Cancel</button>
+                    <button style="background-color: #498dff; border: 0px; " class="compose">Compose</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {% if user.is_authenticated %}
+    <center>
+     
+            <div class="postcompose" style="padding-top: 77px" id="my">
+                <form action="{% url 'posts:postnew' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="Postimage">
+                        <input type="file" name="post_img" accept="image/*" />
+                        <textarea style="margin-bottom: 22px;" name="post_body" placeholder="Write a post" cols="60" rows="5" required></textarea><br />
+                    </div>
+                    <section class="banner">
+                        <div class="button-wrap-wrapper">
+                          <div class="button-wrap">
+                            <div class="button">
+                              <span class="button__like-text">
+                                <input  type="submit" value="POST" />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                </form>
+            </div>
+
+            <hr />
+    </center>
+    {% endif %}
+    
+
+    <div class="head">
+        <h1 style="width: 87%;margin-left: 20px;">Feeds</h1>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}>
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <span>
+            <p style="padding-top: 14px; font-weight: bolder; font-size: 110%">
+                {{request.user}}
+            </p>
+        </span>
+    </div>
+    <div class="column">
+        {% for post in posts %}
+        <div class="main">
+            
+            <div style="background-color: rgb(218, 216, 216)">
+                <div style="display: flex;padding: 10px;">
+                    <h2>{{post.name__username}}</h2>
+                    <p style="margin-left: 100px">{{post.created}}</p>
+                </div>
+                <div style="padding: 10px;">
+                    <p>{{post.post_desc}}</p>
+                </div>
+                <div class="setImage">
+                    <img style="width: 40%" src="{% if post.post_img %}{{post.post_img}}{% endif %}" />
+                </div>
+
+                <div style="padding: 10px;">
+                    <div style="display: flex;">
+                        <a style="background-color: darkgreen; padding: 9px; color: aqua"
+                            href="{% url 'posts:like' post.id %}">Like {% for key,value in likes.items %} {% if key == post.id %}<span>(</span>{{value}}<span>)</span> {% endif %} {% endfor %}</a>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a style="background-color: rgb(255, 19, 50);padding: 9px;color: rgb(245, 243, 243);" href="{% url 'posts:dislike' post.id %}">DisLike {% for key,value in dislikes.items %} {% if key == post.id %} <span>(</span>{{value}}<span>)</span> {% endif %} {% endfor %}</a>
+                    
+
+                        <a style="
+                        background-color: rgb(19 81 255);
+                        padding: 9px;
+                        color: rgb(245, 243, 243);"
+                        href="{% url 'posts:comment' post.id %}">Comments {% for comment in comment_numbers %} {% if comment.post_id == post.id %} ({{comment.comments}}) {% endif %} {% endfor %}</a><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+<script>
+
+    const button = document.querySelector(".button");
+    let { width, height, x: buttonX, y: buttonY } = button.getBoundingClientRect(); // gives you width, height, left-X,top-y of the button
+    
+    buttonX = buttonX + width / 2; //  center point of button on x-axis
+    buttonY = buttonY + height / 2; //  center point of button on y-axis
+    
+    /*************** Functions ***************/
+    
+    let distance = width;
+    let mouseHasEntered = true;
+    let mouseIsInButtonTerritory;
+    
+    function mouseMove(e) {
+      const x = e.x; // current x of cursor
+      const y = e.y; // current y of cursor
+    
+      const leftBorderLine = buttonX - distance;
+      const rightBorderLine = buttonX + distance;
+      const topBorderLine = buttonY - distance;
+      const bottomBorderline = buttonY + distance;
+      const xWalk = (x - buttonX) / 2; // the distance to move the button when mouse moves on X axis
+      const yWalk = (y - buttonY) / 2; // the distance to move the button when mouse moves on Y axis
+    
+      mouseIsInButtonTerritory =
+        x > leftBorderLine &&
+        x < rightBorderLine &&
+        y > topBorderLine &&
+        y < bottomBorderline; // becomes true if  mouse is inside all of these border-line
+    
+      if (mouseIsInButtonTerritory) {
+        if (mouseHasEntered) {
+          // this must happen only once to create outside borderline
+          //creating another level borderline by incresing distance;
+          // while cursor is returing the button comes out of nearest border-line and return from this borderline
+          distance = distance + distance;
+          mouseHasEntered = false;
+        }
+        catchCursor(xWalk, yWalk); // call the function when mouse in in the button's territory
+      } else {
+        resetPositon();
+      }
+    }
+    
+    function catchCursor(xWalk, yWalk) {
+      // translates the button in the direction where cursor is.
+      button.style.transform = `translate(${xWalk}px, ${yWalk}px)`;
+    }
+    
+    function resetPositon() {
+      // resets the postion of the button as it was initial.
+      button.style.transform = `translate(${0}px, ${0}px)`;
+      if(!mouseHasEntered)distance/=2;
+      mouseHasEntered = true;
+      // when button is return to it's position (mouseHasEntered = true) lets to increase the initial borderline of button for the next time
+    }
+    
+    /*************** Event-handler ***************/
+    
+    window.addEventListener("mousemove", mouseMove);
+    //window.addEventListener("mouseout", resetPositon);
+    
+    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $(".postcompose").hide();
+    $(".cancel").click(function () {
+        $(".postcompose").slideUp();
+    });
+    $(".compose").click(function () {
+        $(".postcompose").slideToggle();
+    });
+});
+</script>
+</html>

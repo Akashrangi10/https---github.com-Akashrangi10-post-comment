@@ -33,3 +33,13 @@
   background-color: #666;
   color: white;
 }
+.Postimage{
+    display: flex;
+    margin: auto;width: 50%;
+    margin-bottom: 18px;
+    align-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column-reverse;
+}
